@@ -88,7 +88,7 @@ client_data = pd.DataFrame({
 # Create hourly data with known peak and minimum
 hourly_data = pd.DataFrame({
     'Hour': [f'{i:02d}:00' for i in range(24)],
-    'Volume': [0.0] * 24  # Initialize with floats
+    'Volume': np.random.exponential(scale=5000000, size=24)
 })
 # Set known peak and minimum
 hourly_data.loc[18, 'Volume'] = 6279361.08  # 6:00 PM peak
@@ -104,7 +104,7 @@ app.layout = dbc.Container([
                      className='logo', 
                      style={'height': '150px', 'object-fit': 'contain'})
             ], style={'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center', 'padding': '40px', 'marginBottom': '30px', 'width': '100%'}),
-            html.H1("November Mobile Wallet Analysis", 
+            html.H1("November Bank Transfer Analysis", 
                    className="text-primary text-center mb-4",
                    style={'letterSpacing': '2px'})
         ])
@@ -204,6 +204,26 @@ app.layout = dbc.Container([
                                     domain={'x': [0.55, 0.95], 'y': [0.65, 0.95]}
                                 ),
                                 go.Indicator(
+                                    mode="number",
+                                    value=521,
+                                    number={"valueformat": ",",
+                                           "font": {"size": 24}},
+                                    title={"text": "Peak Daily Transactions",
+                                           "font": {"size": 14},
+                                           "align": "center"},
+                                    domain={'x': [0.05, 0.45], 'y': [0.375, 0.625]}
+                                ),
+                                go.Indicator(
+                                    mode="number",
+                                    value=386,
+                                    number={"valueformat": ",",
+                                           "font": {"size": 24}},
+                                    title={"text": "Average Daily Transactions",
+                                           "font": {"size": 14},
+                                           "align": "center"},
+                                    domain={'x': [0.55, 0.95], 'y': [0.375, 0.625]}
+                                ),
+                                go.Indicator(
                                     mode="gauge+number",
                                     value=78.3,
                                     title={"text": "Daily Success Rate",
@@ -215,9 +235,9 @@ app.layout = dbc.Container([
                                         'axis': {'range': [0, 100]},
                                         'bar': {'color': "darkgreen"},
                                         'steps': [
-                                            {'range': [0, 75], 'color': 'rgba(255, 99, 71, 0.3)'},
-                                            {'range': [75, 85], 'color': 'rgba(255, 215, 0, 0.3)'},
-                                            {'range': [85, 100], 'color': 'rgba(0, 128, 0, 0.3)'}
+                                            {'range': [0, 75], 'color': 'rgba(255, 215, 0, 0.2)'},
+                                            {'range': [75, 85], 'color': 'rgba(255, 215, 0, 0.4)'},
+                                            {'range': [85, 100], 'color': 'rgba(0, 128, 0, 0.6)'}
                                         ],
                                         'threshold': {
                                             'line': {'color': "red", 'width': 2},

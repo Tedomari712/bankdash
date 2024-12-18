@@ -19,7 +19,7 @@ app = dash.Dash(
 # This is important for Render deployment
 server = app.server
 
-# Keep the same custom CSS as before
+# Custom CSS for consistent font styling
 app.index_string = '''<!DOCTYPE html>
 <html>
     <head>
@@ -52,7 +52,7 @@ app.index_string = '''<!DOCTYPE html>
     </body>
 </html>'''
 
-# Create DataFrames with the new data
+# Create DataFrames with the data
 monthly_data = pd.DataFrame({
     'Metric': ['Total Transactions', 'Transaction Volume (KES)', 'Successful Transactions', 
                'Failed Transactions', 'Success Rate (%)', 'Unique Remitters', 
@@ -94,7 +94,7 @@ hourly_data = pd.DataFrame({
 hourly_data.loc[18, 'Volume'] = 6279361.08  # 6:00 PM peak
 hourly_data.loc[7, 'Volume'] = 100.00  # 7:00 AM minimum
 
-# Layout remains largely the same but with updated values
+# Layout
 app.layout = dbc.Container([
     # Header with logo and title
     dbc.Row([
@@ -226,7 +226,7 @@ app.layout = dbc.Container([
                                         }
                                     },
                                     domain={'x': [0.15, 0.85], 'y': [0.02, 0.32]}
-                                ),
+                                )
                             ]
                         ).update_layout(
                             height=550,
@@ -295,85 +295,87 @@ app.layout = dbc.Container([
             
             # User Activity Metrics Card
             dbc.Card([
-    dbc.CardHeader("User Activity Metrics"),
-    dbc.CardBody([
-        dcc.Graph(
-            figure=go.Figure(data=[
-                # First row - Icons (unchanged)
-                go.Scatter(
-                    x=[0.2, 0.5, 0.8],
-                    y=[1.15, 1.15, 1.15],
-                    mode='text',
-                    text=['🌍', '👥', '👤'],
-                    textfont=dict(size=24),
-                    hoverinfo='none',
-                    showlegend=False
-                ),
-                # Second row - Titles (unchanged)
-                go.Scatter(
-                    x=[0.2, 0.5, 0.8],
-                    y=[1, 1, 1],
-                    mode='text',
-                    text=['Active Countries', 'Unique Remitters', 'Unique Recipients'],
-                    textfont=dict(size=14),
-                    hoverinfo='none',
-                    showlegend=False
-                ),
-                # Third row - Current Values (unchanged)
-                go.Scatter(
-                    x=[0.2, 0.5, 0.8],
-                    y=[0.85, 0.85, 0.85],
-                    mode='text',
-                    text=['13', '3,784', '4,366'],
-                    textfont=dict(size=24, color='#2E86C1'),
-                    hoverinfo='none',
-                    showlegend=False
-                ),
-                # Fourth row - Previous Values (unchanged)
-                go.Scatter(
-                    x=[0.2, 0.5, 0.8],
-                    y=[0.7, 0.7, 0.7],
-                    mode='text',
-                    text=['vs 14', 'vs 3,561', 'vs 4,139'],
-                    textfont=dict(size=12, color='#666'),
-                    hoverinfo='none',
-                    showlegend=False
-                ),
-                # Fifth row - Change Percentage (Fixed)
-                go.Scatter(
-                    x=[0.2, 0.5, 0.8],
-                    y=[0.6, 0.6, 0.6],
-                    mode='text',
-                    text=['-7.14%', '+6.26%', '+5.48%'],
-                    textfont=dict(
-                        size=14,
-                        color=['#dc3545', '#28a745', '#28a745']  # Red for negative, green for positive
-                    ),
-                    hoverinfo='none',
-                    showlegend=False
-                )
-            ]).update_layout(
-                height=350,
-                showlegend=False,
-                xaxis=dict(
-                    showgrid=False,
-                    zeroline=False,
-                    showticklabels=False,
-                    range=[0, 1]
-                ),
-                yaxis=dict(
-                    showgrid=False,
-                    zeroline=False,
-                    showticklabels=False,
-                    range=[0.5, 1.2]
-                ),
-                margin=dict(l=20, r=20, t=20, b=20),
-                paper_bgcolor='white',
-                plot_bgcolor='white'
-            )
-        )
-    ])
-], className="shadow-sm")
+                dbc.CardHeader("User Activity Metrics"),
+                dbc.CardBody([
+                    dcc.Graph(
+                        figure=go.Figure(data=[
+                            # First row - Icons
+                            go.Scatter(
+                                x=[0.2, 0.5, 0.8],
+                                y=[1.15, 1.15, 1.15],
+                                mode='text',
+                                text=['🌍', '👥', '👤'],
+                                textfont=dict(size=24),
+                                hoverinfo='none',
+                                showlegend=False
+                            ),
+                            # Second row - Titles
+                            go.Scatter(
+                                x=[0.2, 0.5, 0.8],
+                                y=[1, 1, 1],
+                                mode='text',
+                                text=['Active Countries', 'Unique Remitters', 'Unique Recipients'],
+                                textfont=dict(size=14),
+                                hoverinfo='none',
+                                showlegend=False
+                            ),
+                            # Third row - Current Values
+                            go.Scatter(
+                                x=[0.2, 0.5, 0.8],
+                                y=[0.85, 0.85, 0.85],
+                                mode='text',
+                                text=['13', '3,784', '4,366'],
+                                textfont=dict(size=24, color='#2E86C1'),
+                                hoverinfo='none',
+                                showlegend=False
+                            ),
+                            # Fourth row - Previous Values
+                            go.Scatter(
+                                x=[0.2, 0.5, 0.8],
+                                y=[0.7, 0.7, 0.7],
+                                mode='text',
+                                text=['vs 14', 'vs 3,561', 'vs 4,139'],
+                                textfont=dict(size=12, color='#666'),
+                                hoverinfo='none',
+                                showlegend=False
+                            ),
+                            # Fifth row - Change Percentage
+                            go.Scatter(
+                                x=[0.2, 0.5, 0.8],
+                                y=[0.6, 0.6, 0.6],
+                                mode='text',
+                                text=['-7.14%', '+6.26%', '+5.48%'],
+                                textfont=dict(
+                                    size=14,
+                                    color=['#dc3545', '#28a745', '#28a745']
+                                ),
+                                hoverinfo='none',
+                                showlegend=False
+                            )
+                        ]).update_layout(
+                            height=350,
+                            showlegend=False,
+                            xaxis=dict(
+                                showgrid=False,
+                                zeroline=False,
+                                showticklabels=False,
+                                range=[0, 1]
+                            ),
+                            yaxis=dict(
+                                showgrid=False,
+                                zeroline=False,
+                                showticklabels=False,
+                                range=[0.5, 1.2]
+                            ),
+                            margin=dict(l=20, r=20, t=20, b=20),
+                            paper_bgcolor='white',
+                            plot_bgcolor='white'
+                        )
+                    )
+                ])
+            ], className="shadow-sm")
+        ], width=8)
+    ], className="mb-4"),
 
     # Geographic Distribution
     dbc.Row([
@@ -455,7 +457,7 @@ app.layout = dbc.Container([
                 ])
             ], className="shadow-sm")
         ], width=6)
-    ], className="mb-4"),
+    ], className="mb-4")
 
 ], fluid=True, className="p-4")
 

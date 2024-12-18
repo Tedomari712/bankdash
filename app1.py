@@ -56,11 +56,11 @@ app.index_string = '''<!DOCTYPE html>
 monthly_data = pd.DataFrame({
     'Metric': ['Total Transactions', 'Transaction Volume (KES)', 'Successful Transactions', 
                'Failed Transactions', 'Success Rate (%)', 'Unique Remitters', 
-               'Unique Recipients', 'Unique Countries'],
-    'October': [9986, 612844465.61, 8408, 1578, 84.2, 3561, 4139, 14],
-    'November': [11574, 660334518.30, 9066, 2508, 78.3, 3784, 4366, 13],
-    'Net Change': [1588, 47490052.69, 658, 930, -5.9, 223, 227, -1],
-    'Change %': [15.90, 7.75, 7.83, 58.94, -6.97, 6.26, 5.48, -7.14]
+               'Unique Recipients', 'Unique Countries', 'Average Transaction (KES)'],
+    'October': [9986, 612844465.61, 8408, 1578, 84.2, 3561, 4139, 14, 72888.26],
+    'November': [11574, 660334518.30, 9066, 2508, 78.3, 3784, 4366, 13, 72836.37],
+    'Net Change': [1588, 47490052.69, 658, 930, -5.9, 223, 227, -1, -51.89],
+    'Change %': [15.90, 7.75, 7.83, 58.94, -6.97, 6.26, 5.48, -7.14, -0.07]
 })
 
 failure_data = pd.DataFrame({
@@ -156,28 +156,21 @@ app.layout = dbc.Container([
                 ])
             ], className="shadow-sm")
         ]),
-dbc.Col([
-    dbc.Card([
-        dbc.CardBody([
-            html.H5("Avg. Transaction", className="card-title text-center"),
-            # For Bank Transfers:
-            html.H2(f"{72836.37:,.2f}", className="text-primary text-center"),
-            html.P([
-                html.Span("MoM Change: ", className="regular-text"),
-                html.Span(f"{-0.07}%", 
-                         className="regular-text text-danger")
-            ], className="text-center")
-
-            # OR for Mobile Wallet:
-            # html.H2(f"{14098.13:,.2f}", className="text-primary text-center"),
-            # html.P([
-            #     html.Span("MoM Change: ", className="regular-text"),
-            #     html.Span(f"+{5.30}%",
-            #              className="regular-text text-success")
-            # ], className="text-center")
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.H5("Avg. Transaction", className="card-title text-center"),
+                    html.H2(f"{monthly_data.loc[8, 'November']:,.2f}", 
+                           className="text-primary text-center"),
+                    html.P([
+                        html.Span("MoM Change: ", className="regular-text"),
+                        html.Span(f"{monthly_data.loc[8, 'Change %']}%",
+                                className="regular-text text-danger")
+                    ], className="text-center")
+                ])
+            ], className="shadow-sm")
         ])
-    ], className="shadow-sm")
-])
+    ], className="mb-4"),
 
     # Main Charts Row
     dbc.Row([

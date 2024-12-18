@@ -156,19 +156,28 @@ app.layout = dbc.Container([
                 ])
             ], className="shadow-sm")
         ]),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardBody([
-                    html.H5("Avg. Transaction", className="card-title text-center"),
-                    html.H2(f"{monthly_data.loc[1, 'November']/monthly_data.loc[0, 'November']:,.0f}", 
-                           className="text-primary text-center"),
-                    html.P([
-                        html.Span("KES per transaction", className="regular-text")
-                    ], className="text-center text-muted")
-                ])
-            ], className="shadow-sm")
+dbc.Col([
+    dbc.Card([
+        dbc.CardBody([
+            html.H5("Avg. Transaction", className="card-title text-center"),
+            # For Bank Transfers:
+            html.H2(f"{72836.37:,.2f}", className="text-primary text-center"),
+            html.P([
+                html.Span("MoM Change: ", className="regular-text"),
+                html.Span(f"{-0.07}%", 
+                         className="regular-text text-danger")
+            ], className="text-center")
+
+            # OR for Mobile Wallet:
+            # html.H2(f"{14098.13:,.2f}", className="text-primary text-center"),
+            # html.P([
+            #     html.Span("MoM Change: ", className="regular-text"),
+            #     html.Span(f"+{5.30}%",
+            #              className="regular-text text-success")
+            # ], className="text-center")
         ])
-    ], className="mb-4"),
+    ], className="shadow-sm")
+])
 
     # Main Charts Row
     dbc.Row([

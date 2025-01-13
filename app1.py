@@ -241,7 +241,7 @@ app.layout = dbc.Container([
                 ])
             ], className="shadow-sm h-100")
         ])
-    ], className="mb-4 g-3"),
+    ], className="mb-4", justify="center"),  # Added comma here
 
     # Monthly Trends Row
     dbc.Row([

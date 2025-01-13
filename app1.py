@@ -64,14 +64,14 @@ app.index_string = '''<!DOCTYPE html>
     </body>
 </html>'''
 
-# Client logos for significant volume clients (>1% market share)
+# Client logos mapping
 CLIENT_LOGOS = {
     'Lemfi': 'assets/lemfi-logo.png',
     'DLocal': 'assets/dlocal-logo.png',
     'Nala': 'assets/nala-logo.png'
 }
 
-# Monthly data (filtered to remove months with zero activity)
+# Monthly data (filtered for active months)
 monthly_data = pd.DataFrame({
     'Month': ['June', 'July', 'August', 'September', 'October', 'November', 'December'],
     'Transactions': [3239, 6147, 7311, 5853, 9986, 11574, 8217],
@@ -98,7 +98,7 @@ country_data = pd.DataFrame({
     'Market_Share': [43.79, 41.04, 4.28, 3.55, 6.60]
 })
 
-# Client data (filtered to include only active clients)
+# Client data (filtered for active clients)
 client_data = pd.DataFrame({
     'Client': ['Lemfi', 'DLocal', 'Nala', 'Wapipay'],
     'Volume': [2686506229.61, 353927405.68, 23023985.63, 18400642.19],
@@ -109,10 +109,10 @@ client_data = pd.DataFrame({
 # Hourly data
 hourly_data = pd.DataFrame({
     'Hour': [
-        '12:00:00 AM', '12:30:00 AM', '1:00:00 AM', '1:30:00 AM', '2:00:00 AM', '2:30:00 AM',
-        '3:00:00 AM', '3:30:00 AM', '4:00:00 AM', '4:30:00 AM', '5:00:00 AM', '5:30:00 AM',
-        '6:00:00 AM', '6:30:00 AM', '7:00:00 AM', '7:30:00 AM', '8:00:00 AM', '8:30:00 AM',
-        '9:00:00 AM', '9:30:00 AM', '10:00:00 AM', '10:30:00 AM', '11:00:00 AM', '11:30:00 AM'
+        '12:00 AM', '12:30 AM', '1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM',
+        '3:00 AM', '3:30 AM', '4:00 AM', '4:30 AM', '5:00 AM', '5:30 AM',
+        '6:00 AM', '6:30 AM', '7:00 AM', '7:30 AM', '8:00 AM', '8:30 AM',
+        '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'
     ],
     'Volume': [
         31422733.80, 34824950.20, 37178383.70, 39343104.80, 33641452.40, 32227031.80,
@@ -126,7 +126,7 @@ hourly_data = pd.DataFrame({
     ]
 })
 
-# Start App Layout
+# Start layout definition
 app.layout = dbc.Container([
     # Header with VNGRD Logo
     dbc.Row([
@@ -181,7 +181,7 @@ app.layout = dbc.Container([
                 dbc.CardBody([
                     html.H5("Average Success Rate", className="card-title text-center"),
                     html.H2([
-                        f"{monthly_data['Success_Rate'].mean():.1f}",
+                        f"81.87",  # Fixed success rate value
                         html.Small("%", className="text-muted")
                     ], className="text-primary text-center"),
                     html.P([
@@ -220,28 +220,33 @@ app.layout = dbc.Container([
             dbc.Card([
                 dbc.CardBody([
                     html.H5("User Activity Metrics", className="card-title text-center"),
-                    html.Div([
-                        html.P([
-                            html.I(className="fas fa-users me-2"),
-                            "Total Remitters: ",
-                            html.Span(
-                                f"{monthly_data['Unique_Remitters'].sum():,.0f}",
-                                className="text-primary"
+                    dcc.Graph(
+                        figure=go.Figure([
+                            go.Indicator(
+                                mode="number",
+                                value=monthly_data['Unique_Remitters'].sum(),
+                                title={"text": "Total Remitters"},
+                                domain={"row": 0, "column": 0},
+                                number={"font": {"size": 20}}
+                            ),
+                            go.Indicator(
+                                mode="number",
+                                value=monthly_data['Unique_Recipients'].sum(),
+                                title={"text": "Total Recipients"},
+                                domain={"row": 0, "column": 1},
+                                number={"font": {"size": 20}}
                             )
-                        ], className="mb-2"),
-                        html.P([
-                            html.I(className="fas fa-user-check me-2"),
-                            "Total Recipients: ",
-                            html.Span(
-                                f"{monthly_data['Unique_Recipients'].sum():,.0f}",
-                                className="text-success"
-                            )
-                        ], className="mb-0")
-                    ], className="text-center regular-text")
+                        ]).update_layout(
+                            grid={"rows": 1, "columns": 2},
+                            height=100,
+                            margin=dict(l=10, r=10, t=30, b=10),
+                            showlegend=False
+                        )
+                    )
                 ])
             ], className="shadow-sm h-100")
         ])
-    ], className="mb-4", justify="center"),  # Added comma here
+    ], className="mb-4 g-3"),
 
     # Monthly Trends Row
     dbc.Row([
@@ -286,7 +291,7 @@ app.layout = dbc.Container([
                                 tickfont=dict(color='rgba(255, 128, 0, 0.8)'),
                                 overlaying='y',
                                 side='right',
-                                range=[75, 90]  # Adjusted to better show the variations
+                                range=[75, 90]
                             ),
                             height=400,
                             margin=dict(l=50, r=50, t=50, b=30),
@@ -302,7 +307,7 @@ app.layout = dbc.Container([
                 ])
             ], className="shadow-sm")
         ], width=12)
-    ], className="mb-4")
+    ], className="mb-4"),
 
     # Success Rate Gauge and Geographic Distribution
     dbc.Row([
@@ -357,59 +362,6 @@ app.layout = dbc.Container([
             ], className="shadow-sm h-100")
         ], width=4),
 
-        # User Activity Metrics
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("User Activity Metrics"),
-                dbc.CardBody([
-                    html.Div([
-                        dcc.Graph(
-                            figure=go.Figure([
-                                go.Indicator(
-                                    mode="number",
-                                    value=monthly_data['Unique_Remitters'].sum(),
-                                    title={"text": "Total Remitters"},
-                                    number={"font": {"size": 30}},
-                                    domain={"row": 0, "column": 0}
-                                ),
-                                go.Indicator(
-                                    mode="number",
-                                    value=monthly_data['Unique_Recipients'].sum(),
-                                    title={"text": "Total Recipients"},
-                                    number={"font": {"size": 30}},
-                                    domain={"row": 0, "column": 1}
-                                ),
-                                go.Indicator(
-                                    mode="number",
-                                    value=len(country_data) - 1,  # Excluding 'Unknown'
-                                    title={"text": "Active Countries"},
-                                    number={"font": {"size": 30}},
-                                    domain={"row": 1, "column": 0}
-                                ),
-                                go.Indicator(
-                                    mode="number",
-                                    value=monthly_data['Transactions'].mean(),
-                                    title={"text": "Avg Monthly Transactions"},
-                                    number={
-                                        "font": {"size": 30},
-                                        "valueformat": ",.0f"
-                                    },
-                                    domain={"row": 1, "column": 1}
-                                )
-                            ]).update_layout(
-                                grid={"rows": 2, "columns": 2, "pattern": "independent"},
-                                height=300,
-                                margin=dict(l=30, r=30, t=30, b=30)
-                            )
-                        )
-                    ])
-                ])
-            ], className="shadow-sm h-100")
-        ], width=8)
-    ], className="mb-4"),
-
-    # Geographic Distribution and Failure Analysis
-    dbc.Row([
         # Geographic Distribution
         dbc.Col([
             dbc.Card([
@@ -440,7 +392,7 @@ app.layout = dbc.Container([
                                 'text': 'Transaction Volume by Country',
                                 'y': 0.95
                             },
-                            height=400,
+                            height=300,
                             margin=dict(l=20, r=120, t=40, b=20),
                             showlegend=True,
                             legend=dict(
@@ -462,9 +414,12 @@ app.layout = dbc.Container([
                         )
                     )
                 ])
-            ], className="shadow-sm")
-        ], width=6),
+            ], className="shadow-sm h-100")
+        ], width=8)
+    ], className="mb-4"),
 
+    # Transaction Status Analysis
+    dbc.Row([
         # Failure Analysis
         dbc.Col([
             dbc.Card([
@@ -509,8 +464,49 @@ app.layout = dbc.Container([
                     ])
                 ])
             ], className="shadow-sm")
+        ], width=6),
+
+        # Additional User Activity Metrics
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader("Detailed User Activity"),
+                dbc.CardBody([
+                    dcc.Graph(
+                        figure=go.Figure(data=[
+                            go.Scatter(
+                                name='Remitters',
+                                x=monthly_data['Month'],
+                                y=monthly_data['Unique_Remitters'],
+                                mode='lines+markers',
+                                marker=dict(size=8, color='rgba(26, 118, 255, 0.8)'),
+                                line=dict(width=2, color='rgba(26, 118, 255, 0.8)')
+                            ),
+                            go.Scatter(
+                                name='Recipients',
+                                x=monthly_data['Month'],
+                                y=monthly_data['Unique_Recipients'],
+                                mode='lines+markers',
+                                marker=dict(size=8, color='rgba(255, 128, 0, 0.8)'),
+                                line=dict(width=2, color='rgba(255, 128, 0, 0.8)')
+                            )
+                        ]).update_layout(
+                            title='Monthly User Activity Trends',
+                            yaxis_title='Number of Users',
+                            height=400,
+                            margin=dict(l=50, r=50, t=50, b=30),
+                            legend=dict(
+                                orientation="h",
+                                y=1.1,
+                                x=0.5,
+                                xanchor='center'
+                            ),
+                            hovermode='x unified'
+                        )
+                    )
+                ])
+            ], className="shadow-sm")
         ], width=6)
-    ], className="mb-4")
+    ], className="mb-4"),
 
     # Hourly Transaction Pattern
     dbc.Row([
@@ -590,9 +586,9 @@ app.layout = dbc.Container([
                     ),
                     html.Div([
                         html.P([
-                            "Peak Activity: ",
+                            "Peak Hour: ",
                             html.Span(
-                                "9:00:00 AM",
+                                "9:00 AM",
                                 className="text-success"
                             ),
                             html.Span(
@@ -650,7 +646,7 @@ app.layout = dbc.Container([
                             )
                         )
                     ),
-                    # Client Logos
+                    # Client Logos Section
                     html.Div([
                         html.Div([
                             html.Img(
@@ -690,7 +686,7 @@ app.layout = dbc.Container([
                                 )
                             ),
                             go.Scatter(
-                                name='Transactions',
+                                name='Transactions Count',
                                 x=client_data['Client'],
                                 y=client_data['Transactions'],
                                 mode='lines+markers',

@@ -104,7 +104,7 @@ hourly_data = pd.DataFrame({
     ]
 })
 
-# Country data (excluding Unknown)
+# Country data
 country_data = pd.DataFrame({
     'Country': ['CAN', 'CDIV', 'FIN', 'GBR', 'KEN', 'NED', 'NGA', 'SGP', 'USA', 'Unknown'],
     'Volume': [131969949.47, 1970077.63, 746691.00, 1263989309.40, 109322547.12,
@@ -122,7 +122,7 @@ client_data = pd.DataFrame({
     'Market_Share': [87.17, 0.75, 11.48, 0.60, 0.00, 0.00, 0.00]
 })
 
-# Start App Layout
+# Define the layout
 app.layout = dbc.Container([
     # Header
     dbc.Row([
@@ -276,9 +276,7 @@ app.layout = dbc.Container([
                 ])
             ], className="shadow-sm")
         ], width=12)
-    ], className="mb-4")
-
-    # Continue App Layout
+    ], className="mb-4"),
 
     # Success Rate Gauge and Geographic Distribution
     dbc.Row([
@@ -547,49 +545,6 @@ app.layout = dbc.Container([
 
     # Client Analysis
     dbc.Row([
-        # Client Distribution
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Client Distribution Analysis"),
-                dbc.CardBody([
-                    dcc.Graph(
-                        figure=go.Figure(
-                            data=[
-                                go.Bar(
-                                    name='Transaction Volume',
-                                    x=client_data['Client'],
-                                    y=client_data['Volume']/1e6,
-                                    marker_color='rgba(26, 118, 255, 0.8)',
-                                    hovertemplate=(
-                                        "<b>%{x}</b><br>" +
-                                        "Volume: KES %{y:.1f}M<br>" +
-                                        "<extra></extra>"
-                                    )
-                                )
-                            ]
-                        ).update_layout(
-                            title='Client Transaction Volumes',
-                            yaxis_title='Volume (KES Millions)',
-                            height=400,
-                            margin=dict(l=50, r=50, t=50, b=100),
-                            xaxis_tickangle=-45,
-                            showlegend=False
-                        )
-                    ),
-                    html.Div([
-                        html.P([
-                            "Top 3 Clients by Volume:",
-                            html.Br(),
-                            html.Span(
-                                ", ".join(client_data.nlargest(3, 'Volume')['Client'].tolist()),
-                                className="text-success"
-                            )
-                        ], className="mb-0 mt-3 regular-text text-center")
-                    ])
-                ])
-            ], className="shadow-sm")
-        ], width=6),
-
         # Client Market Share
         dbc.Col([
             dbc.Card([
@@ -643,6 +598,47 @@ app.layout = dbc.Container([
                             html.Span(
                                 f"({client_data['Market_Share'].max():.1f}% market share)",
                                 className="text-muted"
+                            )
+                        ], className="mb-0 mt-3 regular-text text-center")
+                    ])
+                ])
+            ], className="shadow-sm")
+        ], width=6),
+
+        # Client Performance
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader("Client Transaction Analysis"),
+                dbc.CardBody([
+                    dcc.Graph(
+                        figure=go.Figure(data=[
+                            go.Bar(
+                                name='Transactions',
+                                x=client_data['Client'],
+                                y=client_data['Transactions'],
+                                marker_color='rgba(26, 118, 255, 0.8)',
+                                yaxis='y',
+                                hovertemplate=(
+                                    "<b>%{x}</b><br>" +
+                                    "Transactions: %{y:,.0f}<br>" +
+                                    "<extra></extra>"
+                                )
+                            )
+                        ]).update_layout(
+                            title='Transaction Volume by Client',
+                            yaxis_title='Number of Transactions',
+                            height=400,
+                            margin=dict(l=50, r=50, t=50, b=100),
+                            showlegend=False,
+                            xaxis_tickangle=-45
+                        )
+                    ),
+                    html.Div([
+                        html.P([
+                            "Total Processed Transactions: ",
+                            html.Span(
+                                f"{client_data['Transactions'].sum():,}",
+                                className="text-success"
                             )
                         ], className="mb-0 mt-3 regular-text text-center")
                     ])

@@ -258,10 +258,14 @@ app.layout = dbc.Container([
                                 name='Transaction Volume',
                                 x=monthly_data['Month'],
                                 y=monthly_data['Volume']/1e6,
-                                marker_color='rgba(26, 118, 255, 0.8)',
+                                marker_color='rgba(26, 118, 255, 0.6)',
                                 yaxis='y',
-                                text=monthly_data['Volume'].apply(lambda x: f'KES {x/1e6:,.0f}M'),
-                                textposition='inside',
+                                text=monthly_data['Volume'].apply(lambda x: f'{x/1e6:,.0f}M'),
+                                textposition='auto',
+                                textfont=dict(
+                                    color='rgba(26, 118, 255, 0.9)',
+                                    size=11
+                                ),
                                 hovertemplate=(
                                     "<b>%{x}</b><br>" +
                                     "Volume: KES %{y:,.0f}M<br>" +
@@ -272,17 +276,19 @@ app.layout = dbc.Container([
                                 name='Transaction Count',
                                 x=monthly_data['Month'],
                                 y=monthly_data['Transactions'],
-                                mode='lines+markers+text',
+                                mode='lines+markers',
                                 marker=dict(
                                     size=8,
-                                    color='rgba(255, 128, 0, 0.8)'
+                                    color='rgba(255, 128, 0, 0.9)',
+                                    line=dict(
+                                        color='white',
+                                        width=1
+                                    )
                                 ),
                                 line=dict(
                                     width=2,
-                                    color='rgba(255, 128, 0, 0.8)'
+                                    color='rgba(255, 128, 0, 0.7)'
                                 ),
-                                text=monthly_data['Transactions'].apply(lambda x: f'{x:,}'),
-                                textposition='top center',
                                 yaxis='y2',
                                 hovertemplate=(
                                     "<b>%{x}</b><br>" +
@@ -292,35 +298,81 @@ app.layout = dbc.Container([
                             )
                         ]).update_layout(
                             title={
-                                'text': 'Monthly Growth Trends (June - December)',
-                                'y': 0.95
+                                'text': 'Monthly Growth Trends',
+                                'y': 0.95,
+                                'x': 0.5,
+                                'xanchor': 'center',
+                                'font': dict(size=14)
                             },
                             yaxis=dict(
                                 title='Volume (KES Millions)',
-                                titlefont=dict(color='rgba(26, 118, 255, 0.8)'),
-                                tickfont=dict(color='rgba(26, 118, 255, 0.8)'),
+                                titlefont=dict(
+                                    color='rgba(26, 118, 255, 0.9)',
+                                    size=12
+                                ),
+                                tickfont=dict(
+                                    color='rgba(26, 118, 255, 0.9)',
+                                    size=10
+                                ),
                                 showgrid=True,
-                                gridcolor='rgba(0,0,0,0.1)'
+                                gridcolor='rgba(0,0,0,0.05)',
+                                gridwidth=1,
+                                zeroline=False
                             ),
                             yaxis2=dict(
                                 title='Number of Transactions',
-                                titlefont=dict(color='rgba(255, 128, 0, 0.8)'),
-                                tickfont=dict(color='rgba(255, 128, 0, 0.8)'),
+                                titlefont=dict(
+                                    color='rgba(255, 128, 0, 0.9)',
+                                    size=12
+                                ),
+                                tickfont=dict(
+                                    color='rgba(255, 128, 0, 0.9)',
+                                    size=10
+                                ),
                                 overlaying='y',
                                 side='right',
-                                showgrid=False
+                                showgrid=False,
+                                zeroline=False
+                            ),
+                            xaxis=dict(
+                                showgrid=False,
+                                tickfont=dict(size=11),
+                                tickangle=0
                             ),
                             height=400,
-                            margin=dict(l=50, r=50, t=50, b=50),
+                            margin=dict(l=60, r=60, t=50, b=30, pad=4),
                             legend=dict(
                                 orientation="h",
-                                y=1.1,
+                                yanchor="bottom",
+                                y=1.02,
+                                xanchor="center",
                                 x=0.5,
-                                xanchor='center'
+                                bgcolor='rgba(255, 255, 255, 0.8)',
+                                bordercolor='rgba(0,0,0,0.1)',
+                                borderwidth=1,
+                                font=dict(size=11)
                             ),
                             hovermode='x unified',
                             showlegend=True,
-                            plot_bgcolor='white'
+                            plot_bgcolor='white',
+                            paper_bgcolor='white',
+                            bargap=0.35,
+                            annotations=[
+                                dict(
+                                    text=f"{count:,}",
+                                    x=month,
+                                    y=count,
+                                    yref='y2',
+                                    xref='x',
+                                    yshift=10,
+                                    showarrow=False,
+                                    font=dict(
+                                        family="Arial",
+                                        size=10,
+                                        color="rgba(255, 128, 0, 0.9)"
+                                    )
+                                ) for month, count in zip(monthly_data['Month'], monthly_data['Transactions'])
+                            ]
                         )
                     )
                 ])

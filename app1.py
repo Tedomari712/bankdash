@@ -255,31 +255,20 @@ app.layout = dbc.Container([
                     dcc.Graph(
                         figure=go.Figure(data=[
                             go.Bar(
-                                name='Transaction Volume',
+                                name='Volume',
                                 x=monthly_data['Month'],
                                 y=monthly_data['Volume']/1e6,
-                                marker_color='rgba(26, 118, 255, 0.6)',
-                                yaxis='y',
-                                text=monthly_data['Volume'].apply(lambda x: f'{x/1e6:,.0f}M'),
-                                textposition='auto',
-                                textfont=dict(
-                                    color='rgba(26, 118, 255, 0.9)',
-                                    size=11
-                                ),
-                                hovertemplate=(
-                                    "<b>%{x}</b><br>" +
-                                    "Volume: KES %{y:,.0f}M<br>" +
-                                    "<extra></extra>"
-                                )
+                                marker_color='rgb(66, 133, 244)',  # Clean blue color
+                                yaxis='y'
                             ),
                             go.Scatter(
-                                name='Transaction Count',
+                                name='Success Rate',
                                 x=monthly_data['Month'],
-                                y=monthly_data['Transactions'],
+                                y=monthly_data['Success_Rate'],
                                 mode='lines+markers',
                                 marker=dict(
-                                    size=8,
-                                    color='rgba(255, 128, 0, 0.9)',
+                                    size=6,
+                                    color='rgb(255, 159, 64)',  # Orange color
                                     line=dict(
                                         color='white',
                                         width=1
@@ -287,95 +276,74 @@ app.layout = dbc.Container([
                                 ),
                                 line=dict(
                                     width=2,
-                                    color='rgba(255, 128, 0, 0.7)'
+                                    color='rgb(255, 159, 64)'
                                 ),
-                                yaxis='y2',
-                                hovertemplate=(
-                                    "<b>%{x}</b><br>" +
-                                    "Transactions: %{y:,.0f}<br>" +
-                                    "<extra></extra>"
-                                )
+                                yaxis='y2'
                             )
                         ]).update_layout(
                             title={
-                                'text': 'Monthly Growth Trends',
+                                'text': 'Monthly Volume and Success Rate Trends',
                                 'y': 0.95,
                                 'x': 0.5,
                                 'xanchor': 'center',
+                                'yanchor': 'top',
                                 'font': dict(size=14)
                             },
                             yaxis=dict(
                                 title='Volume (KES Millions)',
-                                titlefont=dict(
-                                    color='rgba(26, 118, 255, 0.9)',
-                                    size=12
-                                ),
-                                tickfont=dict(
-                                    color='rgba(26, 118, 255, 0.9)',
-                                    size=10
-                                ),
+                                titlefont=dict(size=12),
+                                tickfont=dict(size=10),
+                                gridcolor='rgba(220,220,220,0.4)',
                                 showgrid=True,
-                                gridcolor='rgba(0,0,0,0.05)',
-                                gridwidth=1,
-                                zeroline=False
+                                zeroline=False,
+                                range=[0, max(monthly_data['Volume']/1e6) * 1.1]
                             ),
                             yaxis2=dict(
-                                title='Number of Transactions',
-                                titlefont=dict(
-                                    color='rgba(255, 128, 0, 0.9)',
-                                    size=12
-                                ),
-                                tickfont=dict(
-                                    color='rgba(255, 128, 0, 0.9)',
-                                    size=10
-                                ),
+                                title='Success Rate (%)',
+                                titlefont=dict(size=12),
+                                tickfont=dict(size=10),
                                 overlaying='y',
                                 side='right',
+                                range=[0, 100],
+                                ticksuffix='%',
+                                gridcolor='rgba(220,220,220,0.4)',
                                 showgrid=False,
                                 zeroline=False
                             ),
                             xaxis=dict(
                                 showgrid=False,
                                 tickfont=dict(size=11),
-                                tickangle=0
+                                zeroline=False
                             ),
+                            plot_bgcolor='rgba(240, 245, 255, 0.4)',  # Light blue background
+                            paper_bgcolor='white',
                             height=400,
-                            margin=dict(l=60, r=60, t=50, b=30, pad=4),
+                            margin=dict(l=60, r=60, t=80, b=60),
                             legend=dict(
                                 orientation="h",
                                 yanchor="bottom",
                                 y=1.02,
-                                xanchor="center",
-                                x=0.5,
-                                bgcolor='rgba(255, 255, 255, 0.8)',
-                                bordercolor='rgba(0,0,0,0.1)',
-                                borderwidth=1,
-                                font=dict(size=11)
+                                xanchor="right",
+                                x=1
                             ),
                             hovermode='x unified',
                             showlegend=True,
-                            plot_bgcolor='white',
-                            paper_bgcolor='white',
-                            bargap=0.35,
-                            annotations=[
-                                dict(
-                                    text=f"{count:,}",
-                                    x=month,
-                                    y=count,
-                                    yref='y2',
-                                    xref='x',
-                                    yshift=10,
-                                    showarrow=False,
-                                    font=dict(
-                                        family="Arial",
-                                        size=10,
-                                        color="rgba(255, 128, 0, 0.9)"
-                                    )
-                                ) for month, count in zip(monthly_data['Month'], monthly_data['Transactions'])
-                            ]
-                        )
+                            annotations=[dict(
+                                text=f'Peak Month: December (KES {monthly_data["Volume"].iloc[-1]/1e6:.1f}M, {monthly_data["Success_Rate"].iloc[-1]:.1f}% SUCCESS RATE)',
+                                xref='paper',
+                                yref='paper',
+                                x=0.5,
+                                y=-0.2,
+                                showarrow=False,
+                                font=dict(size=11),
+                                align='center'
+                            )]
+                        ),
+                        config={
+                            'displayModeBar': False
+                        }
                     )
-                ])
+                ], style={'paddingBottom': '40px'})  # Extra padding for peak month annotation
             ], className="shadow-sm")
         ], width=12)
     ], className="mb-4"),

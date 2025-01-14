@@ -146,18 +146,17 @@ app.layout = dbc.Container([
                 html.Img(
                     src='assets/vngrd.PNG',
                     style={
-                        'height': '100px',
+                        'height': '150px',
                         'objectFit': 'contain',
                         'marginBottom': '20px'
                     }
                 ),
                 html.H1(
-                    "2024 ANNUAL BANK TRANSFER ANALYSIS", 
+                    "2024 Annual Bank Transfer Analysis", 
                     className="text-primary text-center",
                     style={
                         'letterSpacing': '2px',
-                        'marginTop': '20px',
-                        'fontWeight': 'bold'
+                        'marginTop': '20px'
                     }
                 )
             ], className="text-center")

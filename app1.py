@@ -233,7 +233,7 @@ app.layout = dbc.Container([
                     html.H5("Total Unique Users", className="card-title text-center"),
                     html.H2(
                         f"42,574", 
-                        c,lassName="text-primary text-center"
+                        className="text-primary text-center"
                     ),
                     html.P([
                         html.Span("Monthly Growth Rate: ", className="regular-text"),

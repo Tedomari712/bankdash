@@ -66,10 +66,10 @@ app.index_string = '''<!DOCTYPE html>
 
 # Client logos mapping (Only significant volume clients)
 CLIENT_LOGOS = {
-    'Lemfi': 'assets/lemfi-logo.png',
-    'DLocal': 'assets/dlocal-logo.png',
-    'Nala': 'assets/nala-logo.png',
-    'Wapipay': 'assets/wapipay.png'
+    'Lemfi': 'assets/LEMFI.png',
+    'DLocal': 'assets/DLocal.png',
+    'Nala': 'assets/Nala.png',
+    'Wapipay': 'assets/wapipay.jpg'
 }
 
 # Monthly data (filtered for active periods)
@@ -144,7 +144,7 @@ app.layout = dbc.Container([
         dbc.Col([
             html.Div([
                 html.Img(
-                    src='assets/vngrd.png',
+                    src='assets/vngrd.PNG',
                     style={
                         'height': '100px',
                         'objectFit': 'contain',

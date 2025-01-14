@@ -68,7 +68,8 @@ app.index_string = '''<!DOCTYPE html>
 CLIENT_LOGOS = {
     'Lemfi': 'assets/lemfi-logo.png',
     'DLocal': 'assets/dlocal-logo.png',
-    'Nala': 'assets/nala-logo.png'
+    'Nala': 'assets/nala-logo.png',
+    'Wapipay': 'assets/wapipay.png'
 }
 
 # Monthly data (filtered for active periods)
@@ -231,13 +232,13 @@ app.layout = dbc.Container([
                 dbc.CardBody([
                     html.H5("Total Unique Users", className="card-title text-center"),
                     html.H2(
-                        f"{monthly_data['Unique_Remitters'].sum():,.0f}", 
-                        className="text-primary text-center"
+                        f"42,574", 
+                        c,lassName="text-primary text-center"
                     ),
                     html.P([
-                        html.Span("Recipients: ", className="regular-text"),
+                        html.Span("Monthly Growth Rate: ", className="regular-text"),
                         html.Span(
-                            f"{monthly_data['Unique_Recipients'].sum():,.0f}",
+                            f"189.92%",
                             className="regular-text text-success"
                         )
                     ], className="text-center")
@@ -320,7 +321,7 @@ app.layout = dbc.Container([
                                 y=[0.85, 0.85, 0.85],
                                 mode='text',
                                 text=[
-                                    f"{len(country_data) - 1}",  # Excluding 'Unknown'
+                                    f"16",  # Excluding 'Unknown'
                                     f"{monthly_data['Unique_Remitters'].sum():,}",
                                     f"{monthly_data['Unique_Recipients'].sum():,}"
                                 ],

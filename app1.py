@@ -246,6 +246,88 @@ app.layout = dbc.Container([
         ])
     ], className="mb-4 g-3"),
 
+    # Monthly Transaction Analysis
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader("Monthly Transaction Analysis"),
+                dbc.CardBody([
+                    dcc.Graph(
+                        figure=go.Figure(data=[
+                            go.Bar(
+                                name='Transaction Volume',
+                                x=monthly_data['Month'],
+                                y=monthly_data['Volume']/1e6,
+                                marker_color='rgba(26, 118, 255, 0.8)',
+                                yaxis='y',
+                                text=monthly_data['Volume'].apply(lambda x: f'KES {x/1e6:,.0f}M'),
+                                textposition='inside',
+                                hovertemplate=(
+                                    "<b>%{x}</b><br>" +
+                                    "Volume: KES %{y:,.0f}M<br>" +
+                                    "<extra></extra>"
+                                )
+                            ),
+                            go.Scatter(
+                                name='Transaction Count',
+                                x=monthly_data['Month'],
+                                y=monthly_data['Transactions'],
+                                mode='lines+markers+text',
+                                marker=dict(
+                                    size=8,
+                                    color='rgba(255, 128, 0, 0.8)'
+                                ),
+                                line=dict(
+                                    width=2,
+                                    color='rgba(255, 128, 0, 0.8)'
+                                ),
+                                text=monthly_data['Transactions'].apply(lambda x: f'{x:,}'),
+                                textposition='top center',
+                                yaxis='y2',
+                                hovertemplate=(
+                                    "<b>%{x}</b><br>" +
+                                    "Transactions: %{y:,.0f}<br>" +
+                                    "<extra></extra>"
+                                )
+                            )
+                        ]).update_layout(
+                            title={
+                                'text': 'Monthly Growth Trends (June - December)',
+                                'y': 0.95
+                            },
+                            yaxis=dict(
+                                title='Volume (KES Millions)',
+                                titlefont=dict(color='rgba(26, 118, 255, 0.8)'),
+                                tickfont=dict(color='rgba(26, 118, 255, 0.8)'),
+                                showgrid=True,
+                                gridcolor='rgba(0,0,0,0.1)'
+                            ),
+                            yaxis2=dict(
+                                title='Number of Transactions',
+                                titlefont=dict(color='rgba(255, 128, 0, 0.8)'),
+                                tickfont=dict(color='rgba(255, 128, 0, 0.8)'),
+                                overlaying='y',
+                                side='right',
+                                showgrid=False
+                            ),
+                            height=400,
+                            margin=dict(l=50, r=50, t=50, b=50),
+                            legend=dict(
+                                orientation="h",
+                                y=1.1,
+                                x=0.5,
+                                xanchor='center'
+                            ),
+                            hovermode='x unified',
+                            showlegend=True,
+                            plot_bgcolor='white'
+                        )
+                    )
+                ])
+            ], className="shadow-sm")
+        ], width=12)
+    ], className="mb-4"),
+
     # Success Rate Gauge and User Activity Metrics
     dbc.Row([
         # Success Rate Gauge

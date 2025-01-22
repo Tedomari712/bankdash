@@ -1,4 +1,4 @@
-# Import required libraries
+# Imports
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -9,7 +9,7 @@ import dash_bootstrap_components as dbc
 import numpy as np
 import os
 
-# Initialize the app
+# App initialization
 app = dash.Dash(
     __name__, 
     external_stylesheets=[
@@ -18,7 +18,7 @@ app = dash.Dash(
     ]
 )
 
-# This is important for Render deployment
+# Render deployment
 server = app.server
 
 # Custom CSS
@@ -64,7 +64,7 @@ app.index_string = '''<!DOCTYPE html>
     </body>
 </html>'''
 
-# Client logos mapping (Only significant volume clients)
+# Client logos mapping
 CLIENT_LOGOS = {
     'Lemfi': 'assets/LEMFI.png',
     'DLocal': 'assets/DLocal.png',
@@ -72,7 +72,7 @@ CLIENT_LOGOS = {
     'Wapipay': 'assets/wapipay.jpg'
 }
 
-# Monthly data (filtered for active periods)
+# Monthly data
 monthly_data = pd.DataFrame({
     'Month': ['June', 'July', 'August', 'September', 'October', 'November', 'December'],
     'Transactions': [3239, 6147, 7311, 5853, 9986, 11574, 8217],
@@ -91,7 +91,7 @@ failure_data = pd.DataFrame({
     'Percentage': [45.29, 13.80, 12.60, 12.81, 8.09, 4.62, 2.39]
 })
 
-# Country data (filtered to remove negligible volumes)
+# Country data 
 country_data = pd.DataFrame({
     'Country': ['USA', 'GBR', 'CAN', 'KEN', 'Unknown'],
     'Volume': [1348601980.70, 1263989309.40, 131969949.47, 109322547.12, 203331985.30],
@@ -99,7 +99,7 @@ country_data = pd.DataFrame({
     'Market_Share': [43.79, 41.04, 4.28, 3.55, 6.60]
 })
 
-# Client data (filtered for active clients)
+# Client data 
 client_data = pd.DataFrame({
     'Client': ['Lemfi', 'DLocal', 'Nala', 'Wapipay'],
     'Volume': [2686506229.61, 353927405.68, 23023985.63, 18400642.19],
@@ -107,7 +107,7 @@ client_data = pd.DataFrame({
     'Market_Share': [87.17, 11.48, 0.75, 0.60]
 })
 
-# Complete 24-hour data
+# 24-hour data
 hourly_data = pd.DataFrame({
     'Hour': [
         '12:00 AM', '12:30 AM', '1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM',
@@ -139,7 +139,6 @@ hourly_data = pd.DataFrame({
 
 # Begin layout
 app.layout = dbc.Container([
-    # Header with VNGRD Logo
     dbc.Row([
         dbc.Col([
             html.Div([
@@ -258,7 +257,7 @@ app.layout = dbc.Container([
                                 name='Volume',
                                 x=monthly_data['Month'],
                                 y=monthly_data['Volume']/1e6,
-                                marker_color='rgb(66, 133, 244)',  # Clean blue color
+                                marker_color='rgb(66, 133, 244)',  
                                 yaxis='y'
                             ),
                             go.Scatter(
@@ -268,7 +267,7 @@ app.layout = dbc.Container([
                                 mode='lines+markers',
                                 marker=dict(
                                     size=6,
-                                    color='rgb(255, 159, 64)',  # Orange color
+                                    color='rgb(255, 159, 64)',  
                                     line=dict(
                                         color='white',
                                         width=1
@@ -315,7 +314,7 @@ app.layout = dbc.Container([
                                 tickfont=dict(size=11),
                                 zeroline=False
                             ),
-                            plot_bgcolor='rgba(240, 245, 255, 0.4)',  # Light blue background
+                            plot_bgcolor='rgba(240, 245, 255, 0.4)',  
                             paper_bgcolor='white',
                             height=400,
                             margin=dict(l=60, r=60, t=80, b=60),
@@ -343,7 +342,7 @@ app.layout = dbc.Container([
                             'displayModeBar': False
                         }
                     )
-                ], style={'paddingBottom': '40px'})  # Extra padding for peak month annotation
+                ], style={'paddingBottom': '40px'})  
             ], className="shadow-sm")
         ], width=12)
     ], className="mb-4"),
@@ -422,7 +421,7 @@ app.layout = dbc.Container([
                                 y=[0.85, 0.85, 0.85],
                                 mode='text',
                                 text=[
-                                    f"16",  # Excluding 'Unknown'
+                                    f"16",  
                                     f"{monthly_data['Unique_Remitters'].sum():,}",
                                     f"{monthly_data['Unique_Recipients'].sum():,}"
                                 ],
@@ -628,7 +627,7 @@ app.layout = dbc.Container([
                                 tickmode='array',
                                 ticktext=hourly_data['Hour'],
                                 tickvals=list(range(len(hourly_data))),
-                                dtick=2  # Show every second hour for better readability
+                                dtick=2  
                             ),
                             hovermode='x unified'
                         )
@@ -798,7 +797,7 @@ app.layout = dbc.Container([
 
 ], fluid=True, className="p-4")
 
-# Initialize server for deployment
+# Initialize server
 server = app.server
 
 # Run the app
